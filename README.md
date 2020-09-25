@@ -10,4 +10,4 @@ Thanks for any help and suggestions!
 
 TIA
 
-(The project solution is in the "View" folder.)
+Attempted to move things arround. Being new to GitHub, is there a simple set of commands to update the master from the local computer? (Using the command line.). Thanks.
