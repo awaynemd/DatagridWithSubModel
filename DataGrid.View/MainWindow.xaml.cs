@@ -6,9 +6,16 @@ using System.Windows.Threading;
 
 namespace DataGrid.View
 {
+    public interface ICloseable
+    {
+        event Action RequestClose;
+    }
+
     public partial class MainWindow : Window
     {
-        
+        private AdornerLayer _adornerLayer;
+        private DataGridAnnotationAdorner _adorner;
+
         // The Appointments AppointmentDate is xaml bound (see: DoctorView.xaml) to the SelectedAppointmentDate of the AppointmentEditor.
         public MainWindow()
         {
@@ -30,9 +37,76 @@ namespace DataGrid.View
         /// <param name="args">The <see cref="ScheduledAppointmentEventArgs"/> instance containing the event data.</param>
         private void AppointmentDataGrid_ScheduledAppointment(object sender, ScheduledAppointmentEventArgs args)
         {
+            AdornerClose();
+            AppointmentDataGrid fe = (AppointmentDataGrid)sender;
+
+            ((ICloseable)DataContext).RequestClose += Appointments_RequestClose;
+
+            // The appointmentKey comes directly from the selected listview element. 
+            IVisit visit = (IVisit)args.appointmentKey;
+
+            // Must set the selected visit in the AppointmentEditor before the bindings of the adorner bind it to the DataGridAnnotationControl.
+            // RaiseCommand here causes the "Command" (defined below) of the Appointments.XAML to call the RelayCommand via the DoctorView.Xaml.
+            // The Command Target is SelectedVisit is the AppointmentEditor.cs.
+            RaiseVisitCommand(visit);
+
+            // Creation of the adorner will create the DatGridAnnotationControl and immediately create the bindings.
+            _adorner = new DataGridAnnotationAdorner(fe);
+
+            // put adorner into the adornerlayer.
+            InstallAdorner(fe, _adorner);
         }
 
-       
+        /// <summary>
+        /// Installs the adorner.
+        /// </summary>
+        /// <param name="fe">The fe.</param>
+        /// <param name="adorner">The adorner.</param>
+        /// <exception cref="ArgumentException">datagrid does not have have an adorner layer.</exception>
+        private void InstallAdorner(FrameworkElement fe, Adorner adorner)
+        {
+            _adornerLayer = AdornerLayer.GetAdornerLayer(fe);
+
+            if (_adornerLayer == null)
+            {
+                // if we don't have an adorner layer it's probably because it's too early in the window's construction
+                // Let's re-run at a slightly later time
+                Dispatcher.CurrentDispatcher.BeginInvoke(
+                    DispatcherPriority.Loaded,
+                    new Action(() => InstallAdorner(fe, adorner)));
+                return;
+            }
+
+            if (_adornerLayer == null)
+                throw new ArgumentException("datagrid does not have have an adorner layer.");
+
+            // Add the adorner to the DataGrid's adorner layer.
+            _adornerLayer.Add(adorner);
+        }
+
+
+        private void Appointments_RequestClose()
+        {
+            AdornerClose();
+        }
+
+        /// <summary>
+        /// Remove all the attached events and close the adorner and its control.
+        /// </summary>
+        private void AdornerClose()
+        {
+            if (_adorner != null)
+            {
+                _adorner.Control = null;
+
+                // remove adorner
+                _adornerLayer.Remove(_adorner);
+                _adornerLayer = null;
+                _adorner = null;
+            }
+        }
+
+
         private void RaiseVisitCommand(IVisit visit)
         {
             if (visit is IVisit Visit)

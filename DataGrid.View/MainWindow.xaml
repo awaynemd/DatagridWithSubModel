@@ -51,7 +51,6 @@
             <local:AppointmentDataGrid x:Name="AppointmentTable" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Grid.RowSpan="6"
                       ItemsSource="{Binding Rows}" AutoGenerateColumns="False" 
                       CanUserAddRows="False"  AlternationCount="2" AlternatingRowBackground="LightYellow"
-                      local:AppointmentListView.ScheduledAppointment ="AppointmentDataGrid_ScheduledAppointment" 
                       SelectedItem="{Binding SelectedRow}"                          
                       >
 
@@ -66,7 +65,7 @@
                         </DataGridTemplateColumn.HeaderStyle>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <local:AppointmentListView ItemsSource="{Binding Columns[0].AppointmentKeys}" Height="140" Background="Bisque">
+                                <ListView ItemsSource="{Binding Columns[0].AppointmentKeys}" SelectedItem="{Binding SelectedEntity}" Height="140" Background="Bisque">
                                     <ListView.View>
                                         <GridView>
                                             <GridViewColumn Header="First"     DisplayMemberBinding="{Binding FirstName}" Width="100"/>
@@ -74,7 +73,7 @@
                                             <GridViewColumn Header="BirthDate" DisplayMemberBinding="{Binding BirthDate, StringFormat=d}" Width="100"/>
                                         </GridView>
                                     </ListView.View>
-                                </local:AppointmentListView>
+                                </ListView>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -87,7 +86,7 @@
                         </DataGridTemplateColumn.HeaderStyle>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <local:AppointmentListView ItemsSource="{Binding Columns[1].AppointmentKeys}" Height="140" Background="Bisque">
+                                <ListView ItemsSource="{Binding Columns[1].AppointmentKeys}" Height="140" Background="Bisque">
                                     <ListView.View>
                                         <GridView>
                                             <GridViewColumn Header="First"     DisplayMemberBinding="{Binding FirstName}" Width="100"/>
@@ -95,7 +94,7 @@
                                             <GridViewColumn Header="BirthDate" DisplayMemberBinding="{Binding BirthDate, StringFormat=d}" Width="100"/>
                                         </GridView>
                                     </ListView.View>
-                                </local:AppointmentListView>
+                                </ListView>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -108,7 +107,7 @@
                         </DataGridTemplateColumn.HeaderStyle>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <local:AppointmentListView ItemsSource="{Binding Columns[2].AppointmentKeys}" Height="140" Background="Bisque">
+                                <ListView ItemsSource="{Binding Columns[2].AppointmentKeys}" Height="140" Background="Bisque">
                                     <ListView.View>
                                         <GridView>
                                             <GridViewColumn Header="First"     DisplayMemberBinding="{Binding FirstName}" Width="100"/>
@@ -116,7 +115,7 @@
                                             <GridViewColumn Header="BirthDate" DisplayMemberBinding="{Binding BirthDate, StringFormat=d}" Width="100"/>
                                         </GridView>
                                     </ListView.View>
-                                </local:AppointmentListView>
+                                </ListView>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -129,7 +128,7 @@
                         </DataGridTemplateColumn.HeaderStyle>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <local:AppointmentListView ItemsSource="{Binding Columns[3].AppointmentKeys}"  Height="140" Background="Bisque">
+                                <ListView ItemsSource="{Binding Columns[3].AppointmentKeys}"  Height="140" Background="Bisque">
                                     <ListView.View>
                                         <GridView>
                                             <GridViewColumn Header="First"     DisplayMemberBinding="{Binding FirstName}" Width="100"/>
@@ -137,7 +136,7 @@
                                             <GridViewColumn Header="BirthDate" DisplayMemberBinding="{Binding BirthDate, StringFormat=d}" Width="100"/>
                                         </GridView>
                                     </ListView.View>
-                                </local:AppointmentListView>
+                                </ListView>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

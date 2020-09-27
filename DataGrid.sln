@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30509.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "DataGrid", "DataGrid\DataGrid.fsproj", "{D71C1D69-9287-4DF0-AC58-F9A616903537}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "DataGrid", "DataGrid\DataGrid.fsproj", "{4225C408-3890-45D7-938F-5F68E2136532}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataGrid.View", "DataGrid.View\DataGrid.View.csproj", "{061E7F1B-9CA1-41C9-8C16-04D5574FA846}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataGrid.View", "DataGrid.View\DataGrid.View.csproj", "{AE3B0675-43A2-4D7B-A00E-93737A1A3222}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D71C1D69-9287-4DF0-AC58-F9A616903537}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D71C1D69-9287-4DF0-AC58-F9A616903537}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D71C1D69-9287-4DF0-AC58-F9A616903537}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D71C1D69-9287-4DF0-AC58-F9A616903537}.Release|Any CPU.Build.0 = Release|Any CPU
-		{061E7F1B-9CA1-41C9-8C16-04D5574FA846}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{061E7F1B-9CA1-41C9-8C16-04D5574FA846}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{061E7F1B-9CA1-41C9-8C16-04D5574FA846}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{061E7F1B-9CA1-41C9-8C16-04D5574FA846}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4225C408-3890-45D7-938F-5F68E2136532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4225C408-3890-45D7-938F-5F68E2136532}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4225C408-3890-45D7-938F-5F68E2136532}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4225C408-3890-45D7-938F-5F68E2136532}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE3B0675-43A2-4D7B-A00E-93737A1A3222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE3B0675-43A2-4D7B-A00E-93737A1A3222}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE3B0675-43A2-4D7B-A00E-93737A1A3222}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE3B0675-43A2-4D7B-A00E-93737A1A3222}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
