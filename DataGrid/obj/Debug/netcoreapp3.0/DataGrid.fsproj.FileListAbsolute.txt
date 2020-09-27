@@ -1,3 +1,0 @@
-C:\Practice\DataGrid\obj\Debug\netcoreapp3.0\DataGrid.fsprojAssemblyReference.cache
-C:\Practice\DataGrid\obj\Debug\netcoreapp3.0\DataGrid.AssemblyInfoInputs.cache
-C:\Practice\DataGrid\obj\Debug\netcoreapp3.0\DataGrid.AssemblyInfo.fs
