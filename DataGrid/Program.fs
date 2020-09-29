@@ -7,81 +7,78 @@ open System
 module Visit = 
     
     type Model =
-       { ServiceTime: DateTime option
-         DoNotSee: Boolean option
-         ChartNumber: int option
-         LastName: string option
-         FirstName: string option
-         Mi: string option
-         BirthDate: DateTime option
-         PostingTime: DateTime option 
-         AppointmentTime: DateTime option 
-         Id: int}
+      { ServiceTime: DateTime option
+        DoNotSee: Boolean option
+        ChartNumber: int option
+        LastName: string option
+        FirstName: string option
+        Mi: string option
+        BirthDate: DateTime option
+        PostingTime: DateTime option 
+        AppointmentTime: DateTime option 
+        Id: int }
 
-    let SetVisits appointmentsPerCell  = [for x in 1 .. appointmentsPerCell -> 
-                                                {
-                                                  ServiceTime = Some System.DateTime.Now 
-                                                  DoNotSee = Some false 
-                                                  ChartNumber = Some 8812 
-                                                  LastName= Some ("LastName" + string x)
-                                                  FirstName= Some ("FirstName" + string x)
-                                                  Mi = Some "J" 
-                                                  BirthDate = Some(DateTime(2020,09,14))
-                                                  PostingTime = Some DateTime.Now
-                                                  AppointmentTime = Some DateTime.Now
-                                                  Id = x
-                                              }]   
+    let SetVisits appointmentsPerCell =
+      [for x in 1 .. appointmentsPerCell -> 
+        {
+          ServiceTime = Some System.DateTime.Now 
+          DoNotSee = Some false 
+          ChartNumber = Some 8812 
+          LastName= Some ("LastName" + string x)
+          FirstName= Some ("FirstName" + string x)
+          Mi = Some "J" 
+          BirthDate = Some(DateTime(2020,09,14))
+          PostingTime = Some DateTime.Now
+          AppointmentTime = Some DateTime.Now
+          Id = x
+      }]   
 
     type Msg = unit
     
     let bindings() = [
-        "FirstName" |> Binding.oneWayOpt( fun (_,v) -> v.FirstName)
-        "LastName"  |> Binding.oneWayOpt( fun (_,v) -> v.LastName)
-        "BirthDate" |> Binding.oneWayOpt( fun (_,v) -> v.BirthDate) 
-        "ServiceTime" |> Binding.oneWayOpt( fun (_,v) -> v.ServiceTime)
+      "FirstName"   |> Binding.oneWayOpt(fun v -> v.FirstName)
+      "LastName"    |> Binding.oneWayOpt(fun v -> v.LastName)
+      "BirthDate"   |> Binding.oneWayOpt(fun v -> v.BirthDate) 
+      "ServiceTime" |> Binding.oneWayOpt(fun v -> v.ServiceTime)
     ]
 
 module Cell =
 
     type Model =
-        { RowNumber: int
-          ColumnNumber: int
-          AppointmentKeys: Visit.Model list
-          ColumnTime: TimeSpan
-          AppointmentCount: int
-          AppointmentTime: DateTime option  // all lines in the cell have the same appointment time.  
-          Id: int
-          SelectedAppointmentKey: int option
-        }
+      { RowNumber: int
+        ColumnNumber: int
+        AppointmentKeys: Visit.Model list
+        ColumnTime: TimeSpan
+        AppointmentCount: int
+        AppointmentTime: DateTime option  // all lines in the cell have the same appointment time.  
+        Id: int
+        SelectedAppointmentKey: int option }
 
     let SetCell (rowNumber: int, columnNumber: int) =
-        let AppointmentsPerCell = 4
-        {RowNumber = rowNumber
-         ColumnNumber = columnNumber
-         AppointmentKeys =  Visit.SetVisits AppointmentsPerCell  
-         ColumnTime = System.TimeSpan.FromMinutes(float(columnNumber * 15))
-         AppointmentCount = 4
-         AppointmentTime = Some(DateTime.Now)
-         Id=rowNumber*10 + columnNumber
-         SelectedAppointmentKey = None
-         }
+      let AppointmentsPerCell = 4
+      { RowNumber = rowNumber
+        ColumnNumber = columnNumber
+        AppointmentKeys =  Visit.SetVisits AppointmentsPerCell  
+        ColumnTime = System.TimeSpan.FromMinutes(float(columnNumber * 15))
+        AppointmentCount = 4
+        AppointmentTime = Some(DateTime.Now)
+        Id = rowNumber * 10 + columnNumber
+        SelectedAppointmentKey = None }
 
     type Msg =
-        | SetAppointmentKey  of int option
+      | SetAppointmentKey of int option
+      | NoOp
 
     
     let update msg m =
-        match msg with
-        | SetAppointmentKey keyId -> {m with SelectedAppointmentKey = keyId}
+      match msg with
+      | SetAppointmentKey keyId -> { m with SelectedAppointmentKey = keyId }
+      | NoOp -> m
 
 
-    let bindings() =[
-        "AppointmentKeys"  |> Binding.subModelSeq(
-                                (fun (m,_) -> m.AppointmentKeys),
-                                (fun v -> v.Id),
-                                 Visit.bindings )
-
-        "SelectedAppointmentKey" |> Binding.subModelSelectedItem("AppointmentKeys", (fun (m,_) -> m.SelectedAppointmentKey), SetAppointmentKey)
+    let bindings () = [
+      "AppointmentKeys" |> Binding.subModelSeq((fun m -> m.AppointmentKeys), snd, (fun v -> v.Id), (fun _ -> NoOp), Visit.bindings)
+      "SelectedAppointmentKey" |> Binding.subModelSelectedItem("AppointmentKeys", (fun m -> m.SelectedAppointmentKey), SetAppointmentKey)
     ]
 
 module Row =
@@ -91,25 +88,19 @@ module Row =
         Columns: Cell.Model list 
         Id: int }
 
-    let SetRow (rowNumber: int, startTime: System.TimeSpan)= 
-        let columnCount = 4
-        let hr = System.TimeSpan.FromHours(1.0)
-        let rowTime = startTime + System.TimeSpan.FromTicks(hr.Ticks * int64(rowNumber))
-        { RowTime = rowTime.ToString("h':00'")
-          Columns = [for columnNumber in 1 .. columnCount -> Cell.SetCell(rowNumber, columnNumber) ]
-          Id = rowNumber
-        }
+    let SetRow (rowNumber: int, startTime: System.TimeSpan) = 
+      let columnCount = 4
+      let hr = System.TimeSpan.FromHours(1.0)
+      let rowTime = startTime + System.TimeSpan.FromTicks(hr.Ticks * int64(rowNumber))
+      { RowTime = rowTime.ToString("h':00'")
+        Columns = [for columnNumber in 1 .. columnCount -> Cell.SetCell(rowNumber, columnNumber)]
+        Id = rowNumber }
 
     
     let bindings () = [
-        "RowTime" |> Binding.oneWay( fun (m,r) -> r.RowTime)
-        "Columns" |> Binding.subModelSeq(
-                                            (fun (_,r) -> r.Columns),
-                                            (fun c -> c.Id),
-                                             Cell.bindings                            
-                                          )
-    
-    ] 
+      "RowTime" |> Binding.oneWay(fun r -> r.RowTime)
+      "Columns" |> Binding.subModelSeq((fun r -> r.Columns), snd, (fun c -> c.Id), (fun _ -> ()), Cell.bindings)
+    ]
     
 
 type Model =
@@ -120,30 +111,25 @@ type Model =
 type Msg =
   | SetAppointmentDate of DateTime
   | SetSelectedRow of int option
+  | NoOp
 
 let init () =
     let rowCount = 9
     let startTime = TimeSpan.FromHours(float(8))
     { AppointmentDate = DateTime.Now 
       Rows = [for rowNumber in 0 .. rowCount -> Row.SetRow(rowNumber, startTime)]
-      SelectedRow = None
-    }
+      SelectedRow = None }
 
 let update msg m =
   match msg with
-  | SetAppointmentDate d -> {m with AppointmentDate = d}
-  | SetSelectedRow rowId -> {m with SelectedRow = rowId}
+  | SetAppointmentDate d -> { m with AppointmentDate = d }
+  | SetSelectedRow rowId -> { m with SelectedRow = rowId }
+  | NoOp -> m
 
 let bindings () : Binding<Model, Msg> list = [
-  "SelectedAppointmentDate" |> Binding.twoWay( (fun m -> m.AppointmentDate), SetAppointmentDate)
-
-  "Rows" |> Binding.subModelSeq(
-                                 (fun m -> m.Rows),
-                                 (fun r -> r.Id),
-                                  Row.bindings
-                               )                          
-                    
-  "SelectedRow" |> Binding.subModelSelectedItem("Rows", (fun (m,_) -> m.SelectedRow), SetSelectedRow)
+  "SelectedAppointmentDate" |> Binding.twoWay((fun m -> m.AppointmentDate), SetAppointmentDate)
+  "Rows" |> Binding.subModelSeq((fun m -> m.Rows), snd, (fun r -> r.Id), (fun _ -> NoOp), Row.bindings)
+  "SelectedRow" |> Binding.subModelSelectedItem("Rows", (fun m -> m.SelectedRow), SetSelectedRow)
 ]
 
 let main window =
