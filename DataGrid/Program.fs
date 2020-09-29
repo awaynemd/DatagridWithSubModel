@@ -81,7 +81,7 @@ module Cell =
                                 (fun v -> v.Id),
                                  Visit.bindings )
 
-        "SelectedAppointmentKey" |> Binding.subModelSelectedItem("AppointmentKeys", (fun m -> m.SelectedAppointmentKey), SetAppointmentKey)
+        "SelectedAppointmentKey" |> Binding.subModelSelectedItem("AppointmentKeys", (fun (m,_) -> m.SelectedAppointmentKey), SetAppointmentKey)
     ]
 
 module Row =
@@ -104,7 +104,7 @@ module Row =
     let bindings () = [
         "RowTime" |> Binding.oneWay( fun (m,r) -> r.RowTime)
         "Columns" |> Binding.subModelSeq(
-                                            (fun (m,_) -> m.Columns),
+                                            (fun (_,r) -> r.Columns),
                                             (fun c -> c.Id),
                                              Cell.bindings                            
                                           )
@@ -143,7 +143,7 @@ let bindings () : Binding<Model, Msg> list = [
                                   Row.bindings
                                )                          
                     
-  "SelectedRow" |> Binding.subModelSelectedItem("Rows", (fun m -> m.SelectedRow), SetSelectedRow)
+  "SelectedRow" |> Binding.subModelSelectedItem("Rows", (fun (m,_) -> m.SelectedRow), SetSelectedRow)
 ]
 
 let main window =
